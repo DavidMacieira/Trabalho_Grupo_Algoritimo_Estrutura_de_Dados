@@ -1,81 +1,117 @@
 #include <stdio.h>
-
 #include <stdlib.h>
 #include <locale.h>
-#include <stdio.h>
-int n = -1;
-float media;
-void menu(){
-		while(n!=0){
-		printf("1- Gest�o Alunos\n2- Gest�o Notas\n3- Ordernar Alunos\n0- Sair\n");
-		scanf("%i", &n);
-		switch(n){
-			case 1: gerirAlunos();
-				break;
-			case 2: gerirNotas();
-				break;
-			case 3: ordenar();
-				break;
-			case 0: return;
+#include <string.h>
+
+int ids[100];
+char alunos[300][300];
+int totalAlunos = 0;
+int c;
+int i;
+int n;
+
+
+void gerirNotas(){
+	// Implementar procedimento de gerir notas
+	printf("");
+
+}
+void ordenar(){
+	// Implementar procedimento de ordenar alunos
+	printf("");
+
+	
+}
+
+
+void adicionarAluno(){
+
+	printf("Digite o nome do aluno: ");
+	fgets(alunos[totalAlunos], 300, stdin);
+	printf("\n");
+
+	// Remover o caractere de nova linha, se presente
+	alunos[totalAlunos][strcspn(alunos[totalAlunos], "\n")] = '\0';
+	ids[totalAlunos] = totalAlunos;
+	totalAlunos++;
+}
+
+void removerAluno(){
+	char nome[300];
+	int j;
+
+	printf("Digite o nome ou ID do aluno a ser removido: ");
+	fgets(nome, 300, stdin);
+	// Remover o caractere de nova linha, se presente
+	nome[strcspn(nome, "\n")] = '\0';
+
+
+
+	for (i = 0; i < totalAlunos; i++){
+		// Compara o nome armazenado na posição i com o nome fornecido.
+		if (strcmp(nome, alunos[i])== 0){
+			printf("----Aluno removido com sucesso!----\n");
+			printf("ID Aluno: %d ||, Nome Aluno: %s\n", ids[i], alunos[i]);
+			for (j = i; j < totalAlunos - 1; j++) {
+				strcpy(alunos[j], alunos[j+1]);
+			}
+
+			totalAlunos--;
 		}
 	}
 }
+
+
+void listarAlunos(){
+	for (int i = 0; i < totalAlunos; ++i) {
+		printf("ID Aluno: %d ||, Nome Aluno: %s\n", ids[i], alunos[i]);
+	}
+}
+
+
+
 void gerirAlunos(){
-		while(n!=0){
-		printf("1- Adicionar Aluno\n2- Remover Aluno\n3- Listar Alunos\n4- Voltar ao Menu Principal\n0- Sair\n");
-		scanf("%i", &n);
-		switch(n){
-			case 1: adicionarAlunos();
+	n = -1;
+	while (n!= 0){
+		printf("1- Adicionar Aluno\n2- Remover Aluno\n3- Listar Alunos\n0- Voltar Menu Pricinpal\n");
+		scanf("%d", &n);
+		getchar();
+		switch(n) {
+			case 1: adicionarAluno();
 				break;
 			case 2: removerAluno();
 				break;
 			case 3: listarAlunos();
 				break;
-			case 4: menu();
-				break;
 			case 0: return;
+			default: printf("Opção inválida! Tente novamente.\n");
+		}
+	}
+}
+int  menu(){
+	int z = -1;
+	setlocale(LC_ALL,"Portuguese");
+	while(z!=0){
+		printf("1- Gestão Alunos\n2- Gestão Notas\n3- Ordernar Alunos\n0- Sair\n");
+		scanf("%i", &n);
+		switch(n){
+			case 1: gerirAlunos();
+				break;
+				//case 2: gerirNotas();
+				//	break;
+				//case 3: ordenar();
+				//	break;
+			case 0: return 0;
+			default: printf("Opção inválida! Tente novamente.\n");
 		}
 	}
 }
 
-void gerirNotas(){
-		while(n!=0){
-		printf("1- Calcular m�dia de aluno\n2- Calcular m�dia da turma\n3- Voltar ao Menu Principal\n0- Sair\n");
-		scanf("%i", &n);
-		switch(n){
-			case 1: mediaAluno();
-				break;
-			case 2: mediaTurma();
-				break;
-			case 3: menuPrincipal();
-				break;
-			case 0: return;
-		}
-	}
-}
-	
-	
-}
 
-void ordenar(){
-		while(n!=0){
-		printf("1- Ordernar alunos porMedia\n2- Ordenar por nome de aluno\n3- Ordenar por n�mero de aluno\n4- Voltar ao Menu Principal\n0- Sair\n");
-		scanf("%i", &n);
-		switch(n){
-			case 1: ordernarMedia();
-				break;
-			case 2: ordernarNome();
-				break;
-			case 3: ordernarNumero();
-				break;
-			case 4: 
-			case 0: return;
-		}
-	}
-	
-}
- int main(){
+
+int main(){
 	setlocale(LC_ALL,"Portuguese");
 	menu();
+
 }
 
