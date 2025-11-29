@@ -6,4 +6,7 @@ Trabalho realizado por David Macieira, Pedro Consani, Rafael Faria
   - Gestão de alunos.
   - Adição de notas e disciplinas para cada aluno.
 - O trabalho é realizado utiliando a linguagem C utilizando o editor devcpp.
-
+- O programa Possui 3 procedimentos principais:
+  - Gerir Alunos
+  - Gerir Notas
+  - Ordernar Alunos
