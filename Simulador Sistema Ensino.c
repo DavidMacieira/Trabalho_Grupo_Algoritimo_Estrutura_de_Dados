@@ -70,7 +70,7 @@ void listarAlunos(){
 void gerirAlunos(){
 	n = -1;
 	while (n!= 0){
-		printf("1- Adicionar Aluno\n2- Remover Aluno\n3- Listar Alunos\n0- Voltar Menu Pricinpal\n");
+		printf("---------------Gestão de Alunos--------------\n1- Adicionar Aluno\n2- Remover Aluno\n3- Listar Alunos\n0- Voltar Menu Pricinpal\n");
 		scanf("%d", &n);
 		getchar();
 		switch(n) {
