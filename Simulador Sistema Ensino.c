@@ -87,7 +87,7 @@ void gerirAlunos(){
 }
 int  menu(){
 	int z = -1;
-	setlocale(LC_ALL,"Portuguese");
+	setlocale(LC_ALL,"Portuguese_Portugal.1252");
 	while(z!=0){
 		printf("---------------Menu---------------\n1- Gestão Alunos\n2- Gestão Notas\n3- Ordernar Alunos\n0- Sair\n");
 		scanf("%i", &n);
