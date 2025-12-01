@@ -89,7 +89,7 @@ int  menu(){
 	int z = -1;
 	setlocale(LC_ALL,"Portuguese");
 	while(z!=0){
-		printf("1- Gestão Alunos\n2- Gestão Notas\n3- Ordernar Alunos\n0- Sair\n");
+		printf("---------------Menu---------------\n1- Gestão Alunos\n2- Gestão Notas\n3- Ordernar Alunos\n0- Sair\n");
 		scanf("%i", &n);
 		switch(n){
 			case 1: gerirAlunos();
