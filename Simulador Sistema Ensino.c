@@ -25,7 +25,6 @@ void ordenar(){
 
 
 void adicionarAluno(){
-
 	printf("Digite o nome do aluno: ");
 	fgets(alunos[totalAlunos], 300, stdin);
 	printf("\n");
@@ -68,8 +67,6 @@ void listarAlunos(){
 	}
 }
 
-
-
 void gerirAlunos(){
 	n = -1;
 	while (n!= 0){
@@ -108,10 +105,9 @@ int  menu(){
 }
 
 
-
+//main
 int main(){
 	setlocale(LC_ALL,"Portuguese");
 	menu();
-
 }
 
