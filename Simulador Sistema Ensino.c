@@ -3,13 +3,20 @@
 #include <locale.h>
 #include <string.h>
 
-int ids[100];
-char alunos[300][300];
 int totalAlunos = 0;
 int c;
 int i;
 int n;
 
+//Struct permite tratarmos múltiplas varíaveis como uma só.
+typedef struct {
+	char nome[500];
+	int id;
+	float nota[100];
+}Aluno;
+
+//Array de structs do tipo Aluno (100).
+Aluno aluno[100];
 
 void gerirNotas(){
 	// Implementar procedimento de gerir notas
@@ -24,15 +31,22 @@ void ordenar(){
 }
 
 
-void adicionarAluno(){
+void adicionarAluno(Aluno aluno[], int *totalAlunos){
 	printf("Digite o nome do aluno: ");
-	fgets(alunos[totalAlunos], 300, stdin);
-	printf("\n");
+	fgets(aluno[*totalAlunos].nome, 500, stdin);
+	aluno[*totalAlunos].nome[strcspn(aluno[*totalAlunos].nome, "\n")] = '\0';
 
+
+	printf("Digite a nota do aluno: ");
+	scanf("%f", &aluno[*totalAlunos].nota);
+
+	aluno[*totalAlunos].id = *totalAlunos;
+	(*totalAlunos)++;
+
+	printf("\n");
 	// Remover o caractere de nova linha, se presente
-	alunos[totalAlunos][strcspn(alunos[totalAlunos], "\n")] = '\0';
-	ids[totalAlunos] = totalAlunos;
-	totalAlunos++;
+	//alunos[totalAlunos][strcspn(alunos[totalAlunos], "\n")] = '\0';
+
 }
 
 void removerAluno(){
@@ -107,6 +121,7 @@ int  menu(){
 
 //main
 int main(){
+
 	setlocale(LC_ALL,"Portuguese");
 	menu();
 
