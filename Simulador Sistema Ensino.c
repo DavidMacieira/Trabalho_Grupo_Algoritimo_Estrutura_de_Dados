@@ -18,12 +18,7 @@ typedef struct {
 //Array de structs do tipo Aluno (100).
 Aluno aluno[100];
 
-void gerirNotas(){
-	// Implementar procedimento de gerir notas
-	printf("");
-
-}
-void ordenar(){
+void ordenarAlunos(){
 	// Implementar procedimento de ordenar alunos
 	printf("");
 
@@ -108,9 +103,7 @@ int  menu(){
 		switch(n){
 			case 1: gerirAlunos();
 				break;
-				//case 2: gerirNotas();
-				//	break;
-				//case 3: ordenar();
+				//case 2: ordenarAlunos();
 				//	break;
 			case 0: return 0;
 			default: printf("Opção inválida! Tente novamente.\n");
