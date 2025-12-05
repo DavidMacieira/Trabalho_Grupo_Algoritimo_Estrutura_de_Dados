@@ -4,6 +4,7 @@
 #include <string.h>
 
 int totalAlunos = 0;
+int idx = 0;
 int c;
 int i;
 int n;
@@ -13,6 +14,8 @@ typedef struct {
 	char nome[500];
 	int id;
 	float nota[100];
+	char disciplinas[1000][1000];
+
 }Aluno;
 
 //Array de structs do tipo Aluno (100).
@@ -21,32 +24,31 @@ Aluno aluno[100];
 void ordenarAlunos(){
 	// Implementar procedimento de ordenar alunos
 	printf("");
-
-	
 }
 
 
-void adicionarAluno(Aluno aluno[], int *totalAlunos){
+void adicionarAluno(Aluno alunos[], int *total){
 	printf("Digite o nome do aluno: ");
-	fgets(aluno[*totalAlunos].nome, 500, stdin);
-	aluno[*totalAlunos].nome[strcspn(aluno[*totalAlunos].nome, "\n")] = '\0';
+	fgets(alunos[*total].nome, 500, stdin);
+	alunos[*total].nome[strcspn(alunos[*total].nome, "\n")] = '\0';
 
 
 	printf("Digite a nota do aluno: ");
-	scanf("%f", &aluno[*totalAlunos].nota);
+	scanf("%f", &alunos[*total].nota[idx]);
+	idx++;
 
-	aluno[*totalAlunos].id = *totalAlunos;
-	(*totalAlunos)++;
+	alunos[*total].id = *total;
+	(*total)++;
 
-	printf("\n");
 	// Remover o caractere de nova linha, se presente
 	//alunos[totalAlunos][strcspn(alunos[totalAlunos], "\n")] = '\0';
 
 }
 
-void removerAluno(){
+void removerAluno(Aluno alunos[], int *total){
 	char nome[300];
 	int j;
+
 
 	printf("Digite o nome ou ID do aluno a ser removido: ");
 	fgets(nome, 300, stdin);
@@ -54,14 +56,14 @@ void removerAluno(){
 	nome[strcspn(nome, "\n")] = '\0';
 
 
-
-	for (i = 0; i < totalAlunos; i++){
+	for (i = 0; i < *total; i++){
 		// Compara o nome armazenado na posição i com o nome fornecido.
-		if (strcmp(nome, alunos[i])== 0){
+		if (strcmp(nome, alunos[i].nome)== 0){
 			printf("----Aluno removido com sucesso!----\n");
-			printf("ID Aluno: %d ||, Nome Aluno: %s\n", ids[i], alunos[i]);
-			for (j = i; j < totalAlunos - 1; j++) {
-				strcpy(alunos[j], alunos[j+1]);
+			printf("ID Aluno: %d ||, Nome Aluno: %s\n", aluno[i].id, alunos[i].nome);
+
+			for (j = i; j < *total - 1; j++) {
+				aluno[j] = aluno[j + 1];
 			}
 
 			totalAlunos--;
@@ -69,25 +71,24 @@ void removerAluno(){
 	}
 }
 
-
-void listarAlunos(){
-	for (int i = 0; i < totalAlunos; ++i) {
-		printf("ID Aluno: %d ||, Nome Aluno: %s\n", ids[i], alunos[i]);
+void listarAlunos(Aluno aluno[], int *total){
+	for (int i = 0; i < *total; ++i) {
+		printf("ID Aluno: %d, Nome Aluno: %s\n", aluno[i].id, aluno[i].nome);
 	}
 }
 
 void gerirAlunos(){
 	n = -1;
 	while (n!= 0){
-		printf("---------------Gestão de Alunos--------------\n1- Adicionar Aluno\n2- Remover Aluno\n3- Listar Alunos\n0- Voltar Menu Pricinpal\n");
+		printf("\n---------------Gestão de Alunos--------------\n1- Adicionar Aluno\n2- Remover Aluno\n3- Listar Alunos\n0- Voltar Menu Pricinpal\n");
 		scanf("%d", &n);
 		getchar();
 		switch(n) {
-			case 1: adicionarAluno();
+			case 1: adicionarAluno(aluno, &totalAlunos);
 				break;
-			case 2: removerAluno();
+			case 2: removerAluno(aluno, &totalAlunos);
 				break;
-			case 3: listarAlunos();
+			case 3: listarAlunos(aluno, &totalAlunos);
 				break;
 			case 0: return;
 			default: printf("Opção inválida! Tente novamente.\n");
