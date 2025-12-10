@@ -32,9 +32,10 @@ void adicionarAluno(Aluno alunos[], int *total){
 	fgets(alunos[*total].nome, 500, stdin);
 	alunos[*total].nome[strcspn(alunos[*total].nome, "\n")] = '\0';
 
-
 	printf("Digite a nota do aluno: ");
 	scanf("%f", &alunos[*total].nota[idx]);
+	printf("----Aluno adicionado com sucesso!----\n");
+
 	idx++;
 
 	alunos[*total].id = *total;
@@ -66,7 +67,7 @@ void removerAluno(Aluno alunos[], int *total){
 				aluno[j] = aluno[j + 1];
 			}
 
-			totalAlunos--;
+			(*total)--;
 		}
 	}
 }
