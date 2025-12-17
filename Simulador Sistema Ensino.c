@@ -4,10 +4,6 @@
 #include <string.h>
 
 int totalAlunos = 0;
-int idx = 0;
-int c;
-int i;
-int n = -1;
 int qntdDisciplinas = 0;
 #define MAX_DISC 10
 
@@ -31,27 +27,31 @@ typedef struct {
 
 
 //Array de structs do tipo Aluno (100).
-Aluno aluno[300];
+Aluno aluno[600];
 
 void ordenarAlunos(){
 	// Implementar procedimento de ordenar alunos
 	printf("");
 }
-void adicionarDisciplinaAluno(int *idx)
+void adicionarDisciplinaAluno(int *index)
 {
-	int  f = 0;
+	int  j = 0;
 		//Descobrir por que esta finalizando o programa
-	while (f < 3)
+	while (j < 3)
 	{
+		aluno[*index].disciplina[j] = malloc(sizeof(Disciplina));
 		printf("Digite o nome do disciplina: ");
-		fgets(aluno[*idx].disciplina[f]->nomeDisciplina, 300, stdin);
-		aluno[*idx].disciplina[f]->nomeDisciplina[strcspn(aluno[f].disciplina[f]->nomeDisciplina, "\n")] = '\0';
-		f++;
+		fgets(aluno[aluno[*index].id].disciplina[j]->nomeDisciplina, 300, stdin);
+		aluno[*index].disciplina[j]->nomeDisciplina[strcspn(aluno[j].disciplina[*index]->nomeDisciplina, "\n")] = '\0';
+		j++;
+
+
 	}
 
 
 }
 void adicionarAluno(Aluno alunos[], int *total){
+	int idx = 0;
 	printf("Digite o nome do aluno: ");
 	fgets(alunos[*total].nome, 500, stdin);
 	alunos[*total].nome[strcspn(alunos[*total].nome, "\n")] = '\0';
@@ -82,6 +82,7 @@ void removerDisciplina()
 
 void adicionarNotaDisciplina(int *total)
 {
+	int i;
 	char nomeAluno[200];
 	printf("Digite o nome do aluno: ");
 	fgets(nomeAluno, 200, stdin);
@@ -102,6 +103,8 @@ void adicionarNotaDisciplina(int *total)
 }
 
 void removerAluno(Aluno alunos[], int *total){
+	int i;
+
 	char nome[300];
 	int j;
 
@@ -136,6 +139,7 @@ void removerAluno(Aluno alunos[], int *total){
 
 //Fazer ordenar alunos dentro do desse procedimento abaixo.
 void listarAlunos(Aluno alunos[], int *total){
+	int i;
 	int j=0;
 	for (i = 0; i < *total; ++i) {
 		printf("ID Aluno: %d, Nome Aluno: %s", alunos[i].id, alunos[i].nome);
@@ -148,6 +152,7 @@ void listarAlunos(Aluno alunos[], int *total){
 }
 
 void gerirAlunos(){
+	int n;
 	n = -1;
 	while (n!= 0){
 		printf("\n---------------Gestão de Alunos--------------\n1- Adicionar Aluno\n2- Adicionar Nota a uma Disciplina\n3- Remover Aluno\n4- Listar Alunos\n0- Voltar Menu Pricinpal\n");
@@ -169,6 +174,7 @@ void gerirAlunos(){
 }
 void gerirDisciplinas()
 {
+	int n;
 	n = -1;
 	while (n!= 0){
 		printf("\n---------------Gestão de Disciplinas--------------\n1- Adicionar Disciplina\n2- Remover Disciplina\n3- Listar Disciplinas\n0- Voltar Menu Pricinpal\n");
@@ -183,6 +189,7 @@ void gerirDisciplinas()
 	}
 }
 int  menu(){
+	int n = -1;
 	int z = -1;
 	setlocale(LC_ALL,"Portuguese_Portugal.1252");
 	while(z!=0){
