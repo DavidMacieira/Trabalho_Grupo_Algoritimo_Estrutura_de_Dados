@@ -5,26 +5,33 @@
 
 int totalAlunos = 0;
 int qntdDisciplinas = 0;
-#define MAX_DISC 10
+#define MAX_DISC 8
 
 typedef struct
 {
 	char nomeDisciplina[500];
-	int notaDisciplina [100];
+	float notaDisciplina;
 
 }Disciplina;
-Disciplina disciplina[300];
+
+//Array de structs tipo disciplina com disciplinas fixas
+Disciplina disciplinasBase[MAX_DISC] = {
+	{"Geografia", {0}},
+	{"Matematica", {0}},
+	{"Portugues", {0}},
+	{"Historia", {0}},
+	{"Ciencias", {0}},
+	{"Ingles", {0}},
+	{"Educacao Fisica", {0}},
+	{"Filosofia", {0}}
+};
 
 //Struct permite tratarmos múltiplas varíaveis como uma só.
 typedef struct {
 	char nome[500];
 	int id;
-	Disciplina *disciplina[MAX_DISC];
-	int qntdDisciplinas;
-
+	Disciplina disciplinas[MAX_DISC];
 }Aluno;
-
-
 
 //Array de structs do tipo Aluno (100).
 Aluno aluno[600];
@@ -33,80 +40,103 @@ void ordenarAlunos(){
 	// Implementar procedimento de ordenar alunos
 	printf("");
 }
-void adicionarDisciplinaAluno(int *index)
-{
-	int  j = 0;
-		//Descobrir por que esta finalizando o programa
-	while (j < 3)
-	{
-		aluno[*index].disciplina[j] = malloc(sizeof(Disciplina));
-		printf("Digite o nome do disciplina: ");
-		fgets(aluno[aluno[*index].id].disciplina[j]->nomeDisciplina, 300, stdin);
-		aluno[*index].disciplina[j]->nomeDisciplina[strcspn(aluno[j].disciplina[*index]->nomeDisciplina, "\n")] = '\0';
-		j++;
 
+//Fazer ordenar alunos dentro do desse procedimento abaixo.
+void listarAlunos(Aluno alunos[], int *total) {
+	int i;
+	int j=0;
 
+	for (i = 0; i < *total; ++i) {
+		printf("ID Aluno: %d, Nome Aluno: %s\n", alunos[i].id + 1, alunos[i].nome);
+
+		// Cabeçalho das disciplinas
+		printf("%-10s %-20s %-10s\n", "ID", "Disciplina", "Nota");
+
+		for (j = 0; j < MAX_DISC; j++)
+		{
+			printf("%-10d %-20s %-10.2f\n",
+				j + 1,
+				alunos[i].disciplinas[j].nomeDisciplina,
+				alunos[i].disciplinas[j].notaDisciplina
+			);
+		}
+		printf("\n");
 	}
-
-
 }
 void adicionarAluno(Aluno alunos[], int *total){
-	int idx = 0;
+	int i;
 	printf("Digite o nome do aluno: ");
 	fgets(alunos[*total].nome, 500, stdin);
 	alunos[*total].nome[strcspn(alunos[*total].nome, "\n")] = '\0';
-	adicionarDisciplinaAluno(&alunos[*total].id);
-	idx = 0;
 
-
-	printf("----Aluno adicionado com sucesso!----\n");
-
-
+	for (i = 0; i < MAX_DISC; i++)
+	{
+		//Adiciona todas as disciplinas base ao aluno
+		strcpy(alunos[*total].disciplinas[i].nomeDisciplina, disciplinasBase[i].nomeDisciplina);
+	}
 
 	alunos[*total].id = *total;
 	(*total)++;
 
-}
+	printf("----Aluno adicionado com sucesso!----\n");
 
-/*void adicionarDisciplina()
-{
-	printf("Digite o nome do aluno: ");
-	fgets()
-	printf("Digite o nome do disciplina: ");
-	fgets(disciplina->nomeDisciplina, 300, stdin);
-}*/
-void removerDisciplina()
-{
-	printf("Digite o nome do disciplina: ");
+
 }
 
 void adicionarNotaDisciplina(int *total)
 {
 	int i;
-	char nomeAluno[200];
-	printf("Digite o nome do aluno: ");
-	fgets(nomeAluno, 200, stdin);
+	int j;
+	int n = -1;
+	char nomeAluno[500];
+	int idAluno;
+	//Listar alunos para o utilizador escolher
+	listarAlunos(aluno, &totalAlunos);
+
+	printf("Digite o nome do aluno:");
+	fgets(nomeAluno, 500, stdin);
 	nomeAluno[strcspn(nomeAluno, "\n")] = '\0';
 
 	for (i = 0; i < *total; i++ )
 	{
+		//Compara o nome armazenado na posição i com o nome fornecido e retorna 0 se forem iguais
 		if (strcmp(nomeAluno, aluno[i].nome)== 0)
 		{
-			printf("Adicionar Disciplina: ");
-			//Adiciona a disciplina tendo no index quantidade disciplinas
-			fgets(aluno[i].disciplina[aluno[i].qntdDisciplinas]->nomeDisciplina, 300, stdin);
-			aluno[i].qntdDisciplinas++;
+			idAluno = aluno[i].id;
+			printf("Disciplinas:\n");
+			printf("%-10s %-20s %-10s\n", "ID Disc.", "Disciplina", "Nota");
+			for (j = 0; j < 8; j++)
+			{
+				printf("%-10d %-20s %-10.2f\n",
+					j+1,
+					aluno[i].disciplinas[j].nomeDisciplina,
+					aluno[i].disciplinas[j].notaDisciplina
+	 );
+			}
 		}
 	}
-	printf("Digite a disciplina para adicionar a nota: ");
+	printf("Digite o ID da disciplina:");
+	scanf("%d", &n);
 
+	n--; // converte ID (1..8) para índice (0..7)
+
+	if (n < 0 || n >= MAX_DISC) {
+		printf("Disciplina invalida.\n");
+		return;
+	}
+	//Adiciona nota para a disciplina desejada
+	printf("Digite a nota para %s:",
+		   aluno[idAluno].disciplinas[n].nomeDisciplina);
+
+	scanf("%f",
+		  &aluno[idAluno].disciplinas[n].notaDisciplina);
 }
 
 void removerAluno(Aluno alunos[], int *total){
 	int i;
-
 	char nome[300];
 	int j;
+	listarAlunos(aluno, &totalAlunos);
 
 
 	printf("Digite o nome ou ID do aluno a ser removido: ");
@@ -115,17 +145,10 @@ void removerAluno(Aluno alunos[], int *total){
 	nome[strcspn(nome, "\n")] = '\0';
 
 
-	for (i = 1; i <= *total; i++){
+	for (i = 0; i <= *total; i++){
 		// Compara o nome armazenado na posição i com o nome fornecido.
 		if (strcmp(nome, alunos[i].nome)== 0){
-			printf("----Aluno removido com sucesso!----\n");
 			printf("ID Aluno: %d ||, Nome Aluno: %s\n", aluno[i].id, alunos[i].nome);
-
-			//Remove disciplinas aluno
-			for (j = 0; j < aluno[i].qntdDisciplinas; j++)
-			{
-				aluno[i].disciplina[j] = NULL;
-			}
 
 			//Remove aluno
 			for (j = i; j < *total - 1; j++) {
@@ -133,29 +156,18 @@ void removerAluno(Aluno alunos[], int *total){
 			}
 
 			(*total)--;
+			printf("----Aluno removido com sucesso!----\n");
 		}
 	}
 }
 
-//Fazer ordenar alunos dentro do desse procedimento abaixo.
-void listarAlunos(Aluno alunos[], int *total){
-	int i;
-	int j=0;
-	for (i = 0; i < *total; ++i) {
-		printf("ID Aluno: %d, Nome Aluno: %s", alunos[i].id, alunos[i].nome);
-		for (j = 0; j < alunos[i].qntdDisciplinas; j++)
-		{
-			printf("Disciplinas do aluno: %s ", alunos[i].disciplina[j]->nomeDisciplina);
-		}
 
-	}
-}
 
 void gerirAlunos(){
 	int n;
 	n = -1;
 	while (n!= 0){
-		printf("\n---------------Gestão de Alunos--------------\n1- Adicionar Aluno\n2- Adicionar Nota a uma Disciplina\n3- Remover Aluno\n4- Listar Alunos\n0- Voltar Menu Pricinpal\n");
+		printf("\n---------------Gestao de Alunos--------------\n1- Adicionar Aluno\n2- Adicionar Nota a uma Disciplina\n3- Remover Aluno\n4- Listar Alunos\n0- Voltar Menu Pricinpal\n");
 		scanf("%d", &n);
 		getchar();
 		switch(n) {
@@ -177,14 +189,13 @@ void gerirDisciplinas()
 	int n;
 	n = -1;
 	while (n!= 0){
-		printf("\n---------------Gestão de Disciplinas--------------\n1- Adicionar Disciplina\n2- Remover Disciplina\n3- Listar Disciplinas\n0- Voltar Menu Pricinpal\n");
+		printf("\n---------------Gestao de Disciplinas--------------\n1- Adicionar Disciplina\n2- Remover Disciplina\n3- Listar Disciplinas\n0- Voltar Menu Pricinpal\n");
 		scanf("%d", &n);
 		getchar();
 		switch(n)
 		{
 			case 1: //adicionarDisciplina();
 				break;
-			case 2: removerDisciplina();
 		}
 	}
 }
