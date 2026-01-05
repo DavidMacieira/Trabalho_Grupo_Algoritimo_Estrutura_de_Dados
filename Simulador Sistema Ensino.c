@@ -4,7 +4,7 @@
 #include <string.h>
 
 int totalAlunos = 0;
-int qntdDisciplinas = 0;
+//int qntdDisciplinas = 0;
 #define MAX_DISC 8
 
 typedef struct
@@ -16,14 +16,14 @@ typedef struct
 
 //Array de structs tipo disciplina com disciplinas fixas
 Disciplina disciplinasBase[MAX_DISC] = {
-	{"Geografia", {0}},
-	{"Matematica", {0}},
-	{"Portugues", {0}},
-	{"Historia", {0}},
-	{"Ciencias", {0}},
-	{"Ingles", {0}},
-	{"Educacao Fisica", {0}},
-	{"Filosofia", {0}}
+	{"Geografia", 0.0f},
+	{"Matematica", 0.0f},
+	{"Portugues", 0.0f},
+	{"Historia", 0.0f},
+	{"Ciencias", 0.0f},
+	{"Ingles", 0.0f},
+	{"Educacao Fisica", 0.0f},
+	{"Filosofia", 0.0f}
 };
 
 //Struct permite tratarmos múltiplas varíaveis como uma só.
@@ -33,7 +33,7 @@ typedef struct {
 	Disciplina disciplinas[MAX_DISC];
 }Aluno;
 
-//Array de structs do tipo Aluno (100).
+//Array de structs do tipo Aluno.
 Aluno aluno[600];
 
 void ordenarAlunos(){
@@ -89,7 +89,7 @@ void adicionarNotaDisciplina(int *total)
 	int j;
 	int n = -1;
 	char nomeAluno[500];
-	int idAluno;
+	int idAluno = -1;
 	//Listar alunos para o utilizador escolher
 	listarAlunos(aluno, &totalAlunos);
 
@@ -113,10 +113,14 @@ void adicionarNotaDisciplina(int *total)
 					aluno[i].disciplinas[j].notaDisciplina
 	 );
 			}
+		} else
+		{
+			printf("Aluno nao encontrado!");
 		}
 	}
 	printf("Digite o ID da disciplina:");
 	scanf("%d", &n);
+	getchar();
 
 	n--; // converte ID (1..8) para índice (0..7)
 
@@ -128,9 +132,17 @@ void adicionarNotaDisciplina(int *total)
 	printf("Digite a nota para %s:",
 		   aluno[idAluno].disciplinas[n].nomeDisciplina);
 
-	scanf("%f",
-		  &aluno[idAluno].disciplinas[n].notaDisciplina);
+	scanf("%f", &aluno[idAluno].disciplinas[n].notaDisciplina);
+	getchar();
+
+	if (aluno[idAluno].disciplinas[n].notaDisciplina < 0 || aluno[idAluno].disciplinas[n].notaDisciplina > 20) {
+		printf("Nota invalida\n");
+		aluno[idAluno].disciplinas[n].notaDisciplina = 0;
+		adicionarNotaDisciplina(&totalAlunos);
+
+	}
 }
+
 
 void removerAluno(Aluno alunos[], int *total){
 	int i;
@@ -145,7 +157,7 @@ void removerAluno(Aluno alunos[], int *total){
 	nome[strcspn(nome, "\n")] = '\0';
 
 
-	for (i = 0; i <= *total; i++){
+	for (i = 0; i < *total; i++){
 		// Compara o nome armazenado na posição i com o nome fornecido.
 		if (strcmp(nome, alunos[i].nome)== 0){
 			printf("ID Aluno: %d ||, Nome Aluno: %s\n", aluno[i].id, alunos[i].nome);
@@ -204,7 +216,7 @@ int  menu(){
 	int z = -1;
 	setlocale(LC_ALL,"Portuguese_Portugal.1252");
 	while(z!=0){
-		printf("---------------Menu---------------\n1- Gestão Alunos\n2- Gestão Disciplinas\n3- Ordernar Alunos\n0- Sair\n");
+		printf("---------------Menu---------------\n1- Gestao Alunos\n2- Gestao Disciplinas\n3- Ordernar Alunos\n0- Sair\n");
 		scanf("%i", &n);
 		switch(n){
 			case 1: gerirAlunos();
@@ -212,7 +224,7 @@ int  menu(){
 			case 2: gerirDisciplinas();
 				break;
 			case 0: return 0;
-			default: printf("Opção inválida! Tente novamente.\n");
+			default: printf("Opçao inválida! Tente novamente.\n");
 		}
 	}
 }
