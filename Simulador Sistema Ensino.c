@@ -6,7 +6,7 @@
 int totalAlunos = 0;
 //int qntdDisciplinas = 0;
 #define MAX_DISC 8
-
+int idRemovido = -1;
 typedef struct
 {
 	char nomeDisciplina[500];
@@ -47,7 +47,7 @@ void listarAlunos(Aluno alunos[], int *total) {
 	int j=0;
 
 	for (i = 0; i < *total; ++i) {
-		printf("ID Aluno: %d, Nome Aluno: %s\n", alunos[i].id + 1, alunos[i].nome);
+		printf("ID Aluno: %d, Nome Aluno: %s\n", alunos[i].id, alunos[i].nome);
 
 		// Cabeçalho das disciplinas
 		printf("%-10s %-20s %-10s\n", "ID", "Disciplina", "Nota");
@@ -63,6 +63,17 @@ void listarAlunos(Aluno alunos[], int *total) {
 		printf("\n");
 	}
 }
+void listarAlunosSemDisc(Aluno alunos[], int *total) {
+	int i;
+	int j=0;
+
+	for (i = 0; i < *total; ++i) {
+		printf("ID Aluno: %d, Nome Aluno: %s\n", alunos[i].id, alunos[i].nome);
+
+		printf("\n");
+	}
+}
+
 void adicionarAluno(Aluno alunos[], int *total){
 	int i;
 	printf("Digite o nome do aluno: ");
@@ -74,8 +85,12 @@ void adicionarAluno(Aluno alunos[], int *total){
 		//Adiciona todas as disciplinas base ao aluno
 		strcpy(alunos[*total].disciplinas[i].nomeDisciplina, disciplinasBase[i].nomeDisciplina);
 	}
-
-	alunos[*total].id = *total;
+	if (idRemovido > 0) {
+		alunos[*total].id = idRemovido;
+		idRemovido = 0;
+	} else {
+		alunos[*total].id = *total + 1;
+	}
 	(*total)++;
 
 	printf("----Aluno adicionado com sucesso!----\n");
@@ -88,10 +103,11 @@ void adicionarNotaDisciplina(int *total)
 	int i;
 	int j;
 	int n = -1;
+	float novaNota;
 	char nomeAluno[500];
 	int idAluno = -1;
 	//Listar alunos para o utilizador escolher
-	listarAlunos(aluno, &totalAlunos);
+	listarAlunosSemDisc(aluno, &totalAlunos);
 
 	printf("Digite o nome do aluno:");
 	fgets(nomeAluno, 500, stdin);
@@ -102,7 +118,7 @@ void adicionarNotaDisciplina(int *total)
 		//Compara o nome armazenado na posição i com o nome fornecido e retorna 0 se forem iguais
 		if (strcmp(nomeAluno, aluno[i].nome)== 0)
 		{
-			idAluno = aluno[i].id;
+			idAluno = i;
 			printf("Disciplinas:\n");
 			printf("%-10s %-20s %-10s\n", "ID Disc.", "Disciplina", "Nota");
 			for (j = 0; j < 8; j++)
@@ -113,11 +129,13 @@ void adicionarNotaDisciplina(int *total)
 					aluno[i].disciplinas[j].notaDisciplina
 	 );
 			}
-		} else
-		{
-			printf("Aluno nao encontrado!");
 		}
 	}
+	if (idAluno == -1)
+		{
+		printf("Aluno nao encontrado!");
+		}
+
 	printf("Digite o ID da disciplina:");
 	scanf("%d", &n);
 	getchar();
@@ -131,24 +149,28 @@ void adicionarNotaDisciplina(int *total)
 	//Adiciona nota para a disciplina desejada
 	printf("Digite a nota para %s:",
 		   aluno[idAluno].disciplinas[n].nomeDisciplina);
-
-	scanf("%f", &aluno[idAluno].disciplinas[n].notaDisciplina);
+	scanf("%f", &novaNota);
 	getchar();
 
-	if (aluno[idAluno].disciplinas[n].notaDisciplina < 0 || aluno[idAluno].disciplinas[n].notaDisciplina > 20) {
-		printf("Nota invalida\n");
-		aluno[idAluno].disciplinas[n].notaDisciplina = 0;
-		adicionarNotaDisciplina(&totalAlunos);
-
+	// Checa se a nova nota é válida
+	if (novaNota < 0 || novaNota > 20) {
+		printf("Nota invalida! A nota existente para %s permanece: %.2f\n", aluno[idAluno].disciplinas[n].nomeDisciplina,
+			   aluno[idAluno].disciplinas[n].notaDisciplina);
+		// Não sobrescreve a nota
+	} else {
+		// Nota válida → atualizar
+		aluno[idAluno].disciplinas[n].notaDisciplina = novaNota;
+		printf("Nota atribuida com sucesso!\n");
 	}
+
 }
 
 
-void removerAluno(Aluno alunos[], int *total){
+void removerAluno(Aluno *alunos, int *total){
 	int i;
 	char nome[300];
 	int j;
-	listarAlunos(aluno, &totalAlunos);
+	listarAlunos(aluno, total);
 
 
 	printf("Digite o nome ou ID do aluno a ser removido: ");
@@ -160,7 +182,8 @@ void removerAluno(Aluno alunos[], int *total){
 	for (i = 0; i < *total; i++){
 		// Compara o nome armazenado na posição i com o nome fornecido.
 		if (strcmp(nome, alunos[i].nome)== 0){
-			printf("ID Aluno: %d ||, Nome Aluno: %s\n", aluno[i].id, alunos[i].nome);
+			printf("ID Aluno: %d || Nome Aluno: %s\n", alunos[i].id, alunos[i].nome);
+			idRemovido = alunos[i].id;
 
 			//Remove aluno
 			for (j = i; j < *total - 1; j++) {
@@ -192,36 +215,22 @@ void gerirAlunos(){
 			case 4: listarAlunos(aluno, &totalAlunos);
 				break;
 			case 0: return;
-			default: printf("Opção inválida! Tente novamente.\n");
+			default: printf("Opçao invalida! Tente novamente.\n");
 		}
 	}
 }
-void gerirDisciplinas()
-{
-	int n;
-	n = -1;
-	while (n!= 0){
-		printf("\n---------------Gestao de Disciplinas--------------\n1- Adicionar Disciplina\n2- Remover Disciplina\n3- Listar Disciplinas\n0- Voltar Menu Pricinpal\n");
-		scanf("%d", &n);
-		getchar();
-		switch(n)
-		{
-			case 1: //adicionarDisciplina();
-				break;
-		}
-	}
-}
+
 int  menu(){
 	int n = -1;
 	int z = -1;
 	setlocale(LC_ALL,"Portuguese_Portugal.1252");
 	while(z!=0){
-		printf("---------------Menu---------------\n1- Gestao Alunos\n2- Gestao Disciplinas\n3- Ordernar Alunos\n0- Sair\n");
+		printf("---------------Menu---------------\n1- Gestao Alunos\n2- Ordernar Alunos\n0- Sair\n");
 		scanf("%i", &n);
 		switch(n){
 			case 1: gerirAlunos();
 				break;
-			case 2: gerirDisciplinas();
+			case 2: ordenarAlunos();
 				break;
 			case 0: return 0;
 			default: printf("Opçao inválida! Tente novamente.\n");
