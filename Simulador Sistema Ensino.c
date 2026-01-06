@@ -173,7 +173,7 @@ void removerAluno(Aluno *alunos, int *total){
 	listarAlunos(aluno, total);
 
 
-	printf("Digite o nome ou ID do aluno a ser removido: ");
+	printf("Digite o nome do aluno a ser removido: ");
 	fgets(nome, 300, stdin);
 	// Remover o caractere de nova linha, se presente
 	nome[strcspn(nome, "\n")] = '\0';
