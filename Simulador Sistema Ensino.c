@@ -407,7 +407,7 @@ void gerirAlunos(){
 	int n;
 	n = -1;
 	while (n!= 0){
-		printf("\n---------------Gestao de Alunos--------------\n1- Adicionar Aluno\n2- Adicionar Nota a uma Disciplina\n3- Remover Aluno\n4- Listar Alunos\n0- Voltar Menu Pricinpal\n");
+		printf("\n---------------Gestao de Alunos--------------\n1- Adicionar Aluno\n2- Adicionar Nota a uma Disciplina\n3- Remover Aluno\n4- Listar Alunos\n0- Voltar Menu Principal\n");
 		scanf("%d", &n);
 		getchar();
 		switch(n) {
