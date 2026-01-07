@@ -7,12 +7,15 @@ int totalAlunos = 0;
 //int qntdDisciplinas = 0;
 #define MAX_DISC 8
 int idRemovido = -1;
+int disciplinaEscolhida = -1;
+
 typedef struct
 {
 	char nomeDisciplina[500];
 	float notaDisciplina;
 
 }Disciplina;
+
 
 //Array de structs tipo disciplina com disciplinas fixas
 Disciplina disciplinasBase[MAX_DISC] = {
@@ -33,12 +36,211 @@ typedef struct {
 	Disciplina disciplinas[MAX_DISC];
 }Aluno;
 
+
+typedef struct {
+	Aluno *alunoPtr;
+	float nota;
+} AlunoDisciplina;
+
 //Array de structs do tipo Aluno.
 Aluno aluno[600];
 
-void ordenarAlunos(){
-	// Implementar procedimento de ordenar alunos
-	printf("");
+int comparaAlunos(const void *a, const void *b) {
+	return strcmp((const char *)a, (const char *)b);
+}
+void ordenarAlunospNome() {
+	//criacao de uma cópia do array alunos para poder ordenar sem alterações no array original
+	char AlunosCopia[600][500];
+	for(int i = 0; i < totalAlunos; i++) {
+		strcpy(AlunosCopia[i], aluno[i].nome); // copia o nome
+	}
+	qsort(AlunosCopia, totalAlunos, sizeof(AlunosCopia[0]), comparaAlunos);
+
+	printf("Ordenacao de Alunos por nome: (%d alunos no total)\n", totalAlunos);
+	for (int i = 0; i < totalAlunos; i++) {
+		printf("%d - %s\n", i + 1, AlunosCopia[i]);
+	}
+}
+
+float calcularMedia(Aluno aluno) {
+	float soma=0;
+	int notasPreenchidas=0;
+	for (int i=0; i<8; i++) {
+		if (aluno.disciplinas[i].notaDisciplina != 0.00) {
+			soma += aluno.disciplinas[i].notaDisciplina;
+			notasPreenchidas++;
+		}
+	}
+	return soma/notasPreenchidas;
+}
+
+// função de comparação para qsort
+int compararAlunosPorDisciplina(const void *a, const void *b) {
+	Aluno *alunoA = (Aluno *)a;
+	Aluno *alunoB = (Aluno *)b;
+
+	float notaA = alunoA->disciplinas[disciplinaEscolhida].notaDisciplina;
+	float notaB = alunoB->disciplinas[disciplinaEscolhida].notaDisciplina;
+
+	if (notaA < notaB) return 1;  // ordem decrescente
+	if (notaA > notaB) return -1;
+	return 0;
+}
+
+
+int compararAlunosPorMedia(const void *a, const void *b) {
+	Aluno *alunoA = (Aluno *)a;
+	Aluno *alunoB = (Aluno *)b;
+
+	float mediaA = calcularMedia(*alunoA);
+	float mediaB = calcularMedia(*alunoB);
+
+	// alunos sem notas vão sempre para o fim
+	if (mediaA < 0 && mediaB < 0) return 0;       // ambos sem notas
+	if (mediaA < 0) return 1;                     // alunoA sem notas -> atrás
+	if (mediaB < 0) return -1;                    // alunoB sem notas -> atrás
+
+	// ordem decrescente: melhor média primeiro
+	if (mediaA < mediaB) return 1;
+	if (mediaA > mediaB) return -1;
+	return 0;
+}
+
+
+
+void ordenarAlunospMedia() {
+
+	if (totalAlunos <= 0) {
+		printf("Nao ha alunos para ordenar.\n");
+		return;
+	}
+
+	Aluno *alunosCopia = malloc(sizeof(Aluno) * totalAlunos);
+
+	if (alunosCopia == NULL) {
+		printf("Erro de memoria.\n");
+		return;
+	}
+
+	for (int i = 0; i < totalAlunos; i++) {
+		alunosCopia[i] = aluno[i];
+	}
+
+	qsort(alunosCopia, totalAlunos, sizeof(Aluno), compararAlunosPorMedia);
+
+	printf("\nOrdenacao de alunos por media (melhor -> pior):\n");
+
+	for (int i = 0; i < totalAlunos; i++) {
+		float media = calcularMedia(alunosCopia[i]);
+		if (media < 0) { // sem notas
+			printf("%d - | ID: %d | Nome: %s | Sem notas\n",
+				   i + 1,
+				   alunosCopia[i].id,
+				   alunosCopia[i].nome);
+		} else {
+			printf("%d - | ID: %d | Nome: %s | Media: %.2f\n",
+				   i + 1,
+				   alunosCopia[i].id,
+				   alunosCopia[i].nome,
+				   media);
+		}
+	}
+
+
+	free(alunosCopia);
+}
+
+void ordenarAlunospDisciplina() {
+	if (totalAlunos == 0) {
+		printf("Nao ha alunos registados!\n");
+		return;
+	}
+
+	printf("\n--------------Ordenacao de alunos por disciplina (melhor -> pior)--------------\n");
+
+	// mostrar disciplinas
+	for (int i = 0; i < MAX_DISC; i++) {
+		printf("| ID: %d | Nome: %s \n", i + 1, disciplinasBase[i].nomeDisciplina);
+	}
+
+	int disciplinaEscolhida;
+	scanf("%d", &disciplinaEscolhida);
+	getchar();
+	disciplinaEscolhida--; // converter para 0..7
+
+	if (disciplinaEscolhida < 0 || disciplinaEscolhida >= MAX_DISC) {
+		printf("Disciplina invalida!\n");
+		return;
+	}
+
+	// criar array de structs temporário com ponteiro para aluno e nota da disciplina
+	AlunoDisciplina aux[600];
+	for (int i = 0; i < totalAlunos; i++) {
+		aux[i].alunoPtr = &aluno[i];
+		aux[i].nota = aluno[i].disciplinas[disciplinaEscolhida].notaDisciplina;
+	}
+
+	// função de comparação
+	int cmp(const void *a, const void *b) {
+		float na = ((AlunoDisciplina*)a)->nota;
+		float nb = ((AlunoDisciplina*)b)->nota;
+		if (na < nb) return 1;
+		if (na > nb) return -1;
+		return 0;
+	}
+
+	qsort(aux, totalAlunos, sizeof(AlunoDisciplina), cmp);
+
+	// imprimir
+	printf("\nOrdenacao de alunos por %s:\n", disciplinasBase[disciplinaEscolhida].nomeDisciplina);
+	for (int i = 0; i < totalAlunos; i++) {
+		printf("%d - | ID: %d | Nome: %s | Nota: %.2f\n",
+			   i + 1,
+			   aux[i].alunoPtr->id,
+			   aux[i].alunoPtr->nome,
+			   aux[i].nota);
+	}
+}
+void ordenarAlunospNotas() {
+	int a = -1;
+	while (a!=0) {
+		printf("\n---------------Ordenacao de Alunos por Notas--------------\n1- Ordenar por media\n2- Ordenar por nota da disciplina\n0- Sair\n");
+		scanf("%d", &a);
+		getchar();
+		switch (a) {
+			case 1:
+				ordenarAlunospMedia();
+				break;
+			case 2:
+				ordenarAlunospDisciplina();
+				break;
+			case 0: return;
+		}
+	}
+}
+
+void ordenarAlunos() {
+	int opcao = -1;
+	if (totalAlunos>0) {
+		while (opcao!=0)
+		{
+			printf("\n---------------Ordenacao de Alunos--------------\n1- Ordenar por nome\n2- Ordenar por notas (melhor para pior)\n0- Voltar\n");
+			scanf("%d", &opcao);
+			getchar();
+
+			switch (opcao) {
+				case 1:
+					ordenarAlunospNome();
+					break;
+				case 2:
+					ordenarAlunospNotas();
+					break;
+				case 0: return;
+			}
+		}
+	} else {
+		printf("Nao ha alunos registados!\n");
+	}
 }
 
 //Fazer ordenar alunos dentro do desse procedimento abaixo.
@@ -220,7 +422,7 @@ void gerirAlunos(){
 	}
 }
 
-int  menu(){
+int menu(){
 	int n = -1;
 	int z = -1;
 	setlocale(LC_ALL,"Portuguese_Portugal.1252");
@@ -241,9 +443,6 @@ int  menu(){
 
 //main
 int main(){
-
-	setlocale(LC_ALL,"Portuguese");
+setlocale(LC_ALL, "Portuguese_Portugal.1252");
 	menu();
-
 }
-
