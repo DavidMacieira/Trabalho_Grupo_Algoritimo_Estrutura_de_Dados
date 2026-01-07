@@ -4,7 +4,6 @@
 #include <string.h>
 
 int totalAlunos = 0;
-//int qntdDisciplinas = 0;
 #define MAX_DISC 8
 int idRemovido = -1;
 typedef struct
@@ -14,7 +13,6 @@ typedef struct
 
 }Disciplina;
 
-//Array de structs tipo disciplina com disciplinas fixas
 Disciplina disciplinasBase[MAX_DISC] = {
 	{"Geografia", 0.0f},
 	{"Matematica", 0.0f},
@@ -26,14 +24,12 @@ Disciplina disciplinasBase[MAX_DISC] = {
 	{"Filosofia", 0.0f}
 };
 
-//Struct permite tratarmos múltiplas varíaveis como uma só.
 typedef struct {
 	char nome[500];
 	int id;
 	Disciplina disciplinas[MAX_DISC];
 }Aluno;
 
-//Array de structs do tipo Aluno.
 Aluno aluno[600];
 
 void ordenarAlunos(){
@@ -170,7 +166,7 @@ void removerAluno(Aluno *alunos, int *total){
 	int i;
 	char nome[300];
 	int j;
-	listarAlunos(aluno, total);
+	listarAlunosSemDisc(aluno, total);
 
 
 	printf("Digite o nome do aluno a ser removido: ");
@@ -202,7 +198,7 @@ void gerirAlunos(){
 	int n;
 	n = -1;
 	while (n!= 0){
-		printf("\n---------------Gestao de Alunos--------------\n1- Adicionar Aluno\n2- Adicionar Nota a uma Disciplina\n3- Remover Aluno\n4- Listar Alunos\n0- Voltar Menu Pricinpal\n");
+		printf("\n---------------Gestao de Alunos--------------\n1- Adicionar Aluno\n2- Adicionar Nota a uma Disciplina\n3- Remover Aluno\n4- Listar Alunos\n0- Voltar Menu Principal\n");
 		scanf("%d", &n);
 		getchar();
 		switch(n) {
